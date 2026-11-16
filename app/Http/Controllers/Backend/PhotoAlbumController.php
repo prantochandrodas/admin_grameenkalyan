@@ -60,7 +60,7 @@ class PhotoAlbumController extends Controller
             if ($request->hasfile('album_photo')) {
                 $maxWidth = 400;
                 $maxHeight = 340;
-                $album_photo = profilePhotoUploads($request, '/uploads/gallery/thumb_image/', 'album_photo', $maxWidth, $maxHeight, 100);
+                $album_photo = profilePhotoUploadsV2($request, '/uploads/gallery/thumb_image/', 'album_photo', $maxWidth, $maxHeight, 20);
             };
             PhotoAlbum::create([
                 'serial_no' => $request->serial_no ?? null,
@@ -98,6 +98,7 @@ class PhotoAlbumController extends Controller
      */
     public function update(Request $request, $id)
     {
+
         $validator = Validator::make(
             $request->all(),
             [
@@ -123,7 +124,7 @@ class PhotoAlbumController extends Controller
             if ($request->hasfile('album_photo')) {
                 $maxWidth = 400;
                 $maxHeight = 340;
-                $album_photo = profilePhotoUploads($request, '/uploads/gallery/thumb_image/', 'album_photo', $maxWidth, $maxHeight, 100);
+                $album_photo = profilePhotoUploadsV2($request, '/uploads/gallery/thumb_image/', 'album_photo', $maxWidth, $maxHeight, 20);
                 $params['album_photo'] = $album_photo;
             };
             PhotoAlbum::where('id', $id)->update($params);

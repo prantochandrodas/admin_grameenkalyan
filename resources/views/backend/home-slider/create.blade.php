@@ -36,7 +36,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-2 control-label">Slider Title <span class="text-danger">*</span></label>
                                     <div class="col-md-10">
-                                        <input type="text" class="form-control" name="title" value="{{ old('title') }}" required>
+                                        <input type="text" class="form-control" name="title" value="{{ old('title') }}">
                                         <small class="form-text text-muted"></small>
                                         @error('title')
                                         <div class="alert alert-danger">{{ $message }}</div>

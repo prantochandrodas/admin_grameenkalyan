@@ -20,6 +20,7 @@ class Timeline extends Model
     protected $fillable = [
         'title',
         'thumb_image',
+        'subtitle',
         'details',
     ];
 }

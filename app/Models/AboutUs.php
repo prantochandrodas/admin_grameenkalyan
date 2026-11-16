@@ -20,6 +20,8 @@ class AboutUs extends Model
     protected $fillable = [
         'title',
         'banner_image',
+        'mission_vision_title',
+        'mission_vision_subtitle',
         'mission',
         'vision',
         'company_intro_title',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\AboutUs;
 use Illuminate\Http\Request;
 use Validator;
-USE DB;
+use DB;
 
 class AboutUsController extends Controller
 {
@@ -52,21 +52,23 @@ class AboutUsController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'banner_image' => 'required|mimes:jpeg,jpg,png',
-            'mission' => 'required',
-            'vision' => 'required',
-            'company_intro_title' => 'required',
-            'company_intro_description' => 'required',
-            'inception_banner_image' => 'required|mimes:jpeg,jpg,png',
-            'inception_title' => 'required',
-            'inception_details' => 'required',
-            'presence_title' => 'required',
-            'presence_sub_title' => 'required',
-            'presence_banner_image' => 'required|mimes:jpeg,jpg,png',
-            'presence_details' => 'required',
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'banner_image' => 'required|mimes:jpeg,jpg,png',
+                'mission' => 'required',
+                'vision' => 'required',
+                'company_intro_title' => 'required',
+                'company_intro_description' => 'required',
+                'inception_banner_image' => 'required|mimes:jpeg,jpg,png',
+                'inception_title' => 'required',
+                'inception_details' => 'required',
+                'presence_title' => 'required',
+                'presence_sub_title' => 'required',
+                'presence_banner_image' => 'required|mimes:jpeg,jpg,png',
+                'presence_details' => 'required',
+            ],
             [
                 'title.required' => "Title field is Required",
                 'banner_image.required' => "Banner Image field is Required",
@@ -87,48 +89,48 @@ class AboutUsController extends Controller
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             DB::beginTransaction();
-            $banner_image='';
-            $inception_banner_image='';
-            $presence_banner_image='';
+            $banner_image = '';
+            $inception_banner_image = '';
+            $presence_banner_image = '';
 
-            if($request->hasfile('banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $banner_image = profilePhotoUploads($request, '/uploads/contents/', 'banner_image', $maxWidth, $maxHeight, 100);
             };
 
-            if($request->hasfile('inception_banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('inception_banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $inception_banner_image = profilePhotoUploads($request, '/uploads/contents/', 'inception_banner_image', $maxWidth, $maxHeight, 100);
             };
 
-            if($request->hasfile('presence_banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('presence_banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $presence_banner_image = profilePhotoUploads($request, '/uploads/contents/', 'presence_banner_image', $maxWidth, $maxHeight, 100);
             };
 
             AboutUs::create([
-                'title' => $request->title??'',
-                'banner_image' => $banner_image??'',
-                'mission' => $request->mission??'',
-                'vision' => $request->vision??'',
-                'company_intro_title' => $request->company_intro_title??'',
-                'company_intro_description' => $request->company_intro_description??'',
-                'inception_banner_image' => $inception_banner_image??'',
-                'inception_title' => $request->inception_title??'',
-                'inception_details' => $request->inception_details??'',
-                'presence_title' => $request->presence_title??'',
-                'presence_sub_title' => $request->presence_sub_title??'',
-                'presence_banner_image' => $presence_banner_image??'',
-                'presence_details' => $request->presence_details??'',
+                'title' => $request->title ?? '',
+                'banner_image' => $banner_image ?? '',
+                'mission' => $request->mission ?? '',
+                'vision' => $request->vision ?? '',
+                'company_intro_title' => $request->company_intro_title ?? '',
+                'company_intro_description' => $request->company_intro_description ?? '',
+                'inception_banner_image' => $inception_banner_image ?? '',
+                'inception_title' => $request->inception_title ?? '',
+                'inception_details' => $request->inception_details ?? '',
+                'presence_title' => $request->presence_title ?? '',
+                'presence_sub_title' => $request->presence_sub_title ?? '',
+                'presence_banner_image' => $presence_banner_image ?? '',
+                'presence_details' => $request->presence_details ?? '',
             ]);
             DB::commit();
             return redirect("/admin/about-us")->with('success', 'New data has been added successfully!');
@@ -157,8 +159,8 @@ class AboutUsController extends Controller
      */
     public function edit($id)
     {
-        $row=AboutUs::find($id);
-        return view('backend.about-us-contents.edit',compact('row'));
+        $row = AboutUs::find($id);
+        return view('backend.about-us-contents.edit', compact('row'));
     }
 
     /**
@@ -170,21 +172,23 @@ class AboutUsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'banner_image' => 'mimes:jpeg,jpg,png',
-            'mission' => 'required',
-            'vision' => 'required',
-            'company_intro_title' => 'required',
-            'company_intro_description' => 'required',
-            'inception_banner_image' => 'mimes:jpeg,jpg,png',
-            'inception_title' => 'required',
-            'inception_details' => 'required',
-            'presence_title' => 'required',
-            'presence_sub_title' => 'required',
-            'presence_banner_image' => 'mimes:jpeg,jpg,png',
-            'presence_details' => 'required',
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'banner_image' => 'mimes:jpeg,jpg,png',
+                'mission' => 'required',
+                'vision' => 'required',
+                'company_intro_title' => 'required',
+                'company_intro_description' => 'required',
+                'inception_banner_image' => 'mimes:jpeg,jpg,png',
+                'inception_title' => 'required',
+                'inception_details' => 'required',
+                'presence_title' => 'required',
+                'presence_sub_title' => 'required',
+                'presence_banner_image' => 'mimes:jpeg,jpg,png',
+                'presence_details' => 'required',
+            ],
             [
                 'title.required' => "Title field is Required",
                 'banner_image.mimes' => "Banner Image should be in jpeg,jpg,png format",
@@ -202,44 +206,46 @@ class AboutUsController extends Controller
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             DB::beginTransaction();
-            $params=[
-                'title' => $request->title??'',
-                'mission' => $request->mission??'',
-                'vision' => $request->vision??'',
-                'company_intro_title' => $request->company_intro_title??'',
-                'company_intro_description' => $request->company_intro_description??'',
-                'inception_title' => $request->inception_title??'',
-                'inception_details' => $request->inception_details??'',
-                'presence_title' => $request->presence_title??'',
-                'presence_sub_title' => $request->presence_sub_title??'',
-                'presence_details' => $request->presence_details??'',
+            $params = [
+                'title' => $request->title ?? '',
+                'mission_vision_title' => $request->mission_vision_title ?? '',
+                'mission_vision_subtitle' => $request->mission_vision_subtitle ?? '',
+                'mission' => $request->mission ?? '',
+                'vision' => $request->vision ?? '',
+                'company_intro_title' => $request->company_intro_title ?? '',
+                'company_intro_description' => $request->company_intro_description ?? '',
+                'inception_title' => $request->inception_title ?? '',
+                'inception_details' => $request->inception_details ?? '',
+                'presence_title' => $request->presence_title ?? '',
+                'presence_sub_title' => $request->presence_sub_title ?? '',
+                'presence_details' => $request->presence_details ?? '',
             ];
 
-            if($request->hasfile('banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $banner_image = profilePhotoUploads($request, '/uploads/contents/', 'banner_image', $maxWidth, $maxHeight, 100);
-                $params['banner_image'] = $banner_image??'';
+                $params['banner_image'] = $banner_image ?? '';
             };
 
-            if($request->hasfile('inception_banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('inception_banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $inception_banner_image = profilePhotoUploads($request, '/uploads/contents/', 'inception_banner_image', $maxWidth, $maxHeight, 100);
-                $params['inception_banner_image'] = $inception_banner_image??'';
+                $params['inception_banner_image'] = $inception_banner_image ?? '';
             };
 
-            if($request->hasfile('presence_banner_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('presence_banner_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $md_thumb_image = profilePhotoUploads($request, '/uploads/contents/', 'presence_banner_image', $maxWidth, $maxHeight, 100);
-                $params['presence_banner_image'] = $md_thumb_image??'';
+                $params['presence_banner_image'] = $md_thumb_image ?? '';
             };
 
             AboutUs::where('id', $id)->update($params);
@@ -260,8 +266,8 @@ class AboutUsController extends Controller
      */
     public function destroy($id)
     {
-        $dataObj=AboutUs::find($id);
+        $dataObj = AboutUs::find($id);
         $dataObj->delete();
-        return back()->with('success','The item data has been deleted successfully!');
+        return back()->with('success', 'The item data has been deleted successfully!');
     }
 }

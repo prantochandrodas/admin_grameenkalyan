@@ -44,7 +44,14 @@ use App\Http\Controllers\Backend\PhotoGalleryController;
 use App\Http\Controllers\Backend\PhotoAlbumController;
 use App\Http\Controllers\HomeContentsController;
 use App\Http\Controllers\AboutUsController;
+use App\Http\Controllers\Backend\DonateController;
 use App\Http\Controllers\Backend\GalleryCategoryController;
+use App\Http\Controllers\Backend\NewsEventController;
+use App\Http\Controllers\Backend\PhotoSubAlbumController;
+use App\Http\Controllers\Backend\PopupImageController;
+use App\Http\Controllers\Backend\ScheduleController;
+use App\Http\Controllers\Backend\StoryCommentController;
+use App\Http\Controllers\Backend\WebsiteBannerController;
 use App\Http\Controllers\ServiceContentsController;
 use App\Http\Controllers\HealthcareContentsController;
 use App\Http\Controllers\DiseaseSpecificMedicareController;
@@ -122,7 +129,9 @@ Route::post('update-summary-report-settings', [SummaryReportSettingsController::
 //    Route::get('/video-gallery', [GalleryFrontController::class,'getVideoGallery']);
 //    Route::get('/video-view-count', [GalleryFrontController::class,'getVideoViewCount']);
 //});
-
+Route::delete('admin/contact/bulk-delete', [ContactBackendController::class, 'bulkDelete'])
+    ->name('contact.bulk-delete');
+Route::resource('admin/contact', ContactBackendController::class);
 Route::group(['prefix' => 'admin', 'middleware' => ['resource.maker', 'auth.acl']], function () {
     Route::get('/my-profile', [UsersController::class, 'myProfile']);
     Route::get('/edit-profile', [UsersController::class, 'editProfile']);
@@ -136,20 +145,32 @@ Route::group(['prefix' => 'admin', 'middleware' => ['resource.maker', 'auth.acl'
     Route::resource('/contact', ContactBackendController::class);
     Route::resource('/user-comment', CustomerFeedbackController::class);
     Route::resource('/career', CareerController::class);
+    Route::post('/career/bulk-delete', [CareerController::class, 'bulkDelete'])->name('career.bulk-delete');
     Route::resource('/reports-summary-settings', SummaryReportSettingsController::class);
     Route::resource('/story-category', StoryCategoryController::class);
     Route::resource('/story', StoryController::class);
-    Route::resource('/members', MemberController::class);
+    Route::get('/story-comments', [StoryCommentController::class, 'index'])->name('story-comments.index');
+    Route::delete('/story-comments/bulk-delete', [StoryCommentController::class, 'bulkDestroy'])->name('story-comments.bulk-destroy');
+    Route::delete('/story-comments/{id}', [StoryCommentController::class, 'destroy'])->name('story-comments.destroy');
     Route::resource('/people', PeoplesController::class);
     Route::resource('/get-center', HealthCenterController::class);
     Route::resource('/health-center', HealthCenterController::class);
     Route::resource('/locator', LocatorController::class);
+    Route::resource('/schedule', ScheduleController::class);
     Route::resource('/designation', DesignationController::class);
     Route::resource('/department', DepartmentController::class);
     Route::resource('/photo-album-category', GalleryCategoryController::class);
     Route::resource('/video-gallery', VideoGalleryController::class);
+    Route::delete('/photo-gallery/bulk-delete', [PhotoGalleryController::class, 'bulkDestroy'])
+        ->name('photo-gallery.bulk-destroy');
+    Route::post('/photo-gallery/bulk-assign', [PhotoGalleryController::class, 'bulkAssign'])
+        ->name('photo-gallery.bulk-assign');
     Route::resource('/photo-gallery', PhotoGalleryController::class);
+    Route::get('/photo-gallery/sub-albums/{albumId}', [PhotoGalleryController::class, 'subAlbums']);
     Route::resource('/photo-album', PhotoAlbumController::class);
+    Route::resource('/photo-sub-album', PhotoSubAlbumController::class);
+
+    Route::resource('/popup-image', PopupImageController::class)->except(['show']);
     //new backend routes 10-07-2023
     Route::resource('/home-contents', HomeContentsController::class);
     Route::resource('/home-slider', HomeSliderController::class);
@@ -162,4 +183,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['resource.maker', 'auth.acl'
     //        Route::resource('/timeline-items', TimelineItemsController::class);
     Route::resource('/newsletter', NewsletterController::class);
     //ends here
+    Route::resource('/donate', DonateController::class);
+    Route::resource('/website-banner', WebsiteBannerController::class);
+    Route::resource('/news-event', NewsEventController::class);
 });

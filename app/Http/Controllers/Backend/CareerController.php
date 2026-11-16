@@ -11,11 +11,27 @@ use DB;
 
 class CareerController extends Controller
 {
-    public function index(Request $request,CareerService $service){
-        try{
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids) || !is_array($ids)) {
+            return back()->with('error', 'Please select at least one item to delete.');
+        }
+
+        try {
+            $count = Career::whereIn('id', $ids)->delete();
+            return back()->with('success', $count . ' item(s) have been deleted successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Something went wrong! Please try again.');
+        }
+    }
+    public function index(Request $request, CareerService $service)
+    {
+        try {
             $rows = $service->getCareer($request);
-           return view('backend.career.index',compact('rows'));
-        }catch (\Exception $e){
+            return view('backend.career.index', compact('rows'));
+        } catch (\Exception $e) {
 
             return response()->json([
                 'success' => false,
@@ -23,7 +39,8 @@ class CareerController extends Controller
             ], 400);
         }
     }
-    public function create(){
+    public function create()
+    {
         return view('backend.land-owner.create');
     }
 
@@ -35,46 +52,47 @@ class CareerController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'type' => 'required',
-            'title' => 'required',
-            'thumb_image' => 'required|mimes:jpeg,jpg,png',
-            'banner_image' => 'required|mimes:jpeg,jpg,png',
-        ],
-        [
-            'type.required' => "Type is Required",
-            'title.required' => "Title is Required"
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'type' => 'required',
+                'title' => 'required',
+                'thumb_image' => 'required|mimes:jpeg,jpg,png',
+                'banner_image' => 'required|mimes:jpeg,jpg,png',
+            ],
+            [
+                'type.required' => "Type is Required",
+                'title.required' => "Title is Required"
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
-
         }
 
         try {
             DB::beginTransaction();
-            $thumb_image='';
-            $banner_image='';
-            
-            if($request->hasfile('thumb_image')){
-                $maxWidth=200;
-                $maxHeight=160;
-                if($request->type=='vertical'){
-                    $maxWidth=160;
-                    $maxHeight=180;
+            $thumb_image = '';
+            $banner_image = '';
+
+            if ($request->hasfile('thumb_image')) {
+                $maxWidth = 200;
+                $maxHeight = 160;
+                if ($request->type == 'vertical') {
+                    $maxWidth = 160;
+                    $maxHeight = 180;
                 }
                 $thumb_image = profilePhotoUploads($request, '/uploads/gallery/thumb_image/', 'thumb_image', $maxWidth, $maxHeight, 70);
             };
-            if($request->hasfile('banner_image')){
+            if ($request->hasfile('banner_image')) {
                 $banner_image = profilePhotoUploads($request, '/uploads/gallery/banner_image', 'banner_image', 590, 708, 70);
             };
             LandOwner::create([
-                'type' => $request->type??'',
-                'title' => $request->title??'',
-                'thumb_image' => $thumb_image??'',
-                'banner_image' => $banner_image??'',
-                'desc' => $request->desc??'',
+                'type' => $request->type ?? '',
+                'title' => $request->title ?? '',
+                'thumb_image' => $thumb_image ?? '',
+                'banner_image' => $banner_image ?? '',
+                'desc' => $request->desc ?? '',
 
             ]);
             DB::commit();
@@ -85,7 +103,7 @@ class CareerController extends Controller
         }
     }
 
-/**
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -93,8 +111,8 @@ class CareerController extends Controller
      */
     public function edit($id)
     {
-        $row=LandOwner::find($id);
-        return view('backend.land-owner.edit',compact('row'));
+        $row = LandOwner::find($id);
+        return view('backend.land-owner.edit', compact('row'));
     }
 
     /**
@@ -106,44 +124,46 @@ class CareerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'type' => 'required',
-            'title' => 'required',
-            'thumb_image' => 'mimes:jpeg,jpg,png',
-            'banner_image' => 'mimes:jpeg,jpg,png',
-        ],
-        [
-            'type.required' => "Type is Required",
-            'title.required' => "Title is Required"
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'type' => 'required',
+                'title' => 'required',
+                'thumb_image' => 'mimes:jpeg,jpg,png',
+                'banner_image' => 'mimes:jpeg,jpg,png',
+            ],
+            [
+                'type.required' => "Type is Required",
+                'title.required' => "Title is Required"
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             DB::beginTransaction();
-            $params=[
-                'type' => $request->type??'',
-                'title' => $request->title??'',
-                'desc' => $request->desc??'',
+            $params = [
+                'type' => $request->type ?? '',
+                'title' => $request->title ?? '',
+                'desc' => $request->desc ?? '',
             ];
 
-            $maxWidth=200;
-                $maxHeight=160;
-                if($request->type=='vertical'){
-                    $maxWidth=160;
-                    $maxHeight=180;
-                }
-
-            if($request->hasfile('thumb_image')){
-                $thumb_image = profilePhotoUploads($request, '/uploads/gallery/thumb_image/', 'thumb_image', $maxWidth, $maxHeight, 70);
-                $params['thumb_image']=$thumb_image;
+            $maxWidth = 200;
+            $maxHeight = 160;
+            if ($request->type == 'vertical') {
+                $maxWidth = 160;
+                $maxHeight = 180;
             }
-            if($request->hasfile('banner_image')){
+
+            if ($request->hasfile('thumb_image')) {
+                $thumb_image = profilePhotoUploads($request, '/uploads/gallery/thumb_image/', 'thumb_image', $maxWidth, $maxHeight, 70);
+                $params['thumb_image'] = $thumb_image;
+            }
+            if ($request->hasfile('banner_image')) {
                 $banner_image = profilePhotoUploads($request, '/uploads/gallery/banner_image', 'banner_image', 590, 708, 70);
-                $params['banner_image']=$banner_image;
+                $params['banner_image'] = $banner_image;
             }
 
             LandOwner::where('id', $id)->update($params);
@@ -164,14 +184,14 @@ class CareerController extends Controller
      */
     public function destroy($id)
     {
-        $galleryObj=Career::find($id);
+        $galleryObj = Career::find($id);
         $galleryObj->delete();
-        return back()->with('success','The item has been deleted successfully!');
+        return back()->with('success', 'The item has been deleted successfully!');
     }
 
-    public function show($id,LandOwnerService $service){
-            $row = $service->getLandOwnerDetails($id);
-            return view('backend.land-owner.view',compact('row'));
-        }
-   
+    public function show($id, LandOwnerService $service)
+    {
+        $row = $service->getLandOwnerDetails($id);
+        return view('backend.land-owner.view', compact('row'));
+    }
 }

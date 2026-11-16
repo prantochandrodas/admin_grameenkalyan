@@ -38,6 +38,20 @@
                                     {{ method_field('PUT') }}
 
                                     <div class="form-group row">
+                                        <label class="col-md-2 control-label" for="navbar_logo">Logo <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <input type="file" name="navbar_logo" id="navbar_logo" accept="image/*" />
+                                            <small class="form-text text-muted">Size should be max:100KB</small>
+                                            @if ($row->navbar_logo ?? '')
+                                                <img width="80px" src="{{ $row->navbar_logo ?? '' }}">
+                                            @endif
+                                            @error('navbar_logo')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-md-2 control-label" for="badge_image">Badge Image <span
                                                 class="text-danger">*</span></label>
                                         <div class="col-md-10">
@@ -214,6 +228,42 @@
                                                 <img width="80px" src="{{ $row->mhi_banner_image ?? '' }}">
                                             @endif
                                             @error('mhi_banner_image')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 control-label" for="annually_serve">Annually Serve
+                                            Image</label>
+                                        <div class="col-md-10">
+                                            <input type="file" name="annually_serve" id="annually_serve"
+                                                accept="image/*" />
+                                            <small class="form-text text-muted">Size should be max:100KB</small>
+                                            @if ($row->annually_serve ?? '')
+                                                <img width="80px" src="{{ $row->annually_serve ?? '' }}">
+                                            @endif
+                                            @error('annually_serve')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 control-label">Work Together Title <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <input type="text" class="form-control" name="work_together_title"
+                                                value="{{ old('work_together_title', $row->work_together_title ?? '') }}">
+                                            @error('work_together_title')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-md-2 control-label">Work Together Description <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <textarea class="form-control" rows="4" name="work_together_description">{{ old('work_together_description', $row->work_together_description ?? '') }}</textarea>
+                                            @error('work_together_description')
                                                 <div class="alert alert-danger">{{ $message }}</div>
                                             @enderror
                                         </div>

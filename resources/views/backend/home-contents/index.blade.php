@@ -61,6 +61,7 @@
                                     <thead>
                                         <tr>
                                             <th>#</th>
+                                            <th>Logo</th>
                                             <th>Badge Image</th>
                                             <th>Intro Title</th>
                                             <th>Intro Sub Titles</th>
@@ -72,6 +73,9 @@
                                             <th>MD Details</th>
                                             <th>AR Banner Image</th>
                                             <th>MHI Banner Image</th>
+                                            <th>Annually Serve</th>
+                                            <th>Work Together Title</th>
+                                            <th>Work Together Description</th>
                                             <th>Work Together Image</th>
                                             <th style="width:184px">Action</th>
                                         </tr>
@@ -83,6 +87,7 @@
                                         @forelse($rows as $r)
                                             <tr>
                                                 <td>{{ $index++ }}.</td>
+                                                <td><img width="100px" src="{{ $r->navbar_logo ?? '' }}"></td>
                                                 <td><img width="50px" src="{{ $r->badge_image ?? '' }}"></td>
                                                 <td>{{ $r->intro_title ?? '' }}</td>
                                                 <td>
@@ -107,6 +112,9 @@
                                                 <td><img width="50px" src="{{ $r->annual_report_banner_image ?? '' }}">
                                                 </td>
                                                 <td><img width="50px" src="{{ $r->mhi_banner_image ?? '' }}"></td>
+                                                <td><img width="50px" src="{{ $r->annually_serve ?? '' }}"></td>
+                                                <td>{{ $r->work_together_title ?? '' }}</td>
+                                                <td>{!! wordSummary($r->work_together_description ?? '', 100) !!}</td>
                                                 <td><img width="50px" src="{{ $r->work_together_image ?? '' }}"></td>
                                                 <td>
                                                     <form action="/admin/home-contents/{{ $r->id }}" method="POST">
@@ -123,7 +131,7 @@
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="13" class="text-center font-weight-bold text-primary">No data
+                                                <td colspan="16" class="text-center font-weight-bold text-primary">No data
                                                     found!</td>
                                             </tr>
                                         @endforelse

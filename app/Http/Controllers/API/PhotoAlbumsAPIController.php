@@ -15,6 +15,7 @@ class PhotoAlbumsAPIController extends BaseController
             ->orderByRaw('serial_no IS NULL')
             ->orderBy('serial_no', 'asc')
             ->orderBy('id', 'desc')
+            ->with('subAlbums')
             ->get();
         return response()->json([
             'success' => true,

@@ -23,6 +23,8 @@ class Home extends Model
     protected $hidden = ['id', 'created_at', 'updated_at'];
 
     protected $fillable = [
+        'work_together_description',
+        'work_together_title',
         'badge_image',
         'intro_title',
         'intro_sub_title_one',

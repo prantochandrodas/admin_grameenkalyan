@@ -8,7 +8,104 @@
  * Date: 4/16/2019
  * Time: 2:29 PM
  */
+function compressImageV2($compressImageTmp, $image_path = '', $type = '', $max_width = '', $max_height = '', $imageQuality = '')
+{
+    // Dimension oporibortito — kono resize hobe na
+    $width = imagesx($compressImageTmp);
+    $height = imagesy($compressImageTmp);
 
+    $tmpimg = imagecreatetruecolor($width, $height);
+
+    $hasTransparency = false;
+    if ($type === 'image/png') {
+        $hasTransparency = compressImageV2_hasAlpha($compressImageTmp, $width, $height);
+    }
+
+    if ($type === 'image/png' || $type === 'image/gif') {
+        imagealphablending($tmpimg, false);
+        imagesavealpha($tmpimg, true);
+        $transparent = imagecolorallocatealpha($tmpimg, 255, 255, 255, 127);
+        imagefilledrectangle($tmpimg, 0, 0, $width, $height, $transparent);
+    } else {
+        $white = imagecolorallocate($tmpimg, 255, 255, 255);
+        imagefilledrectangle($tmpimg, 0, 0, $width, $height, $white);
+    }
+
+    imagecopyresampled($tmpimg, $compressImageTmp, 0, 0, 0, 0, $width, $height, $width, $height);
+
+    // Quality ekhon 5 porjonto namano jete pare (agey 50 chilo minimum)
+    $jpgQuality = $imageQuality ? (int) $imageQuality : 20;
+    $jpgQuality = max(5, min(90, $jpgQuality));
+
+    switch ($type) {
+        case 'image/png':
+            if ($hasTransparency) {
+                imagepng($tmpimg, '.' . $image_path, 6);
+            } else {
+                $image_path = preg_replace('/\.png$/i', '.jpg', $image_path);
+                $whiteFlat = imagecreatetruecolor($width, $height);
+                $white = imagecolorallocate($whiteFlat, 255, 255, 255);
+                imagefilledrectangle($whiteFlat, 0, 0, $width, $height, $white);
+                imagecopy($whiteFlat, $tmpimg, 0, 0, 0, 0, $width, $height);
+                imagejpeg($whiteFlat, '.' . $image_path, $jpgQuality);
+                imagedestroy($whiteFlat);
+            }
+            break;
+
+        case 'image/jpeg':
+            imagejpeg($tmpimg, '.' . $image_path, $jpgQuality);
+            break;
+
+        case 'image/gif':
+            imagegif($tmpimg, '.' . $image_path);
+            break;
+    }
+
+    imagedestroy($tmpimg);
+    imagedestroy($compressImageTmp);
+
+    return $image_path;
+}
+
+function compressImageV2_hasAlpha($image, $width, $height)
+{
+    $step = max(1, (int) round(min($width, $height) / 100));
+    for ($x = 0; $x < $width; $x += $step) {
+        for ($y = 0; $y < $height; $y += $step) {
+            $rgba = imagecolorat($image, $x, $y);
+            $alpha = ($rgba & 0x7F000000) >> 24;
+            if ($alpha > 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+function profilePhotoUploadsV2($request, $destinationPath, $name, $max_width = '', $max_height = '', $imageQuality = '')
+{
+    try {
+        if ($request->hasFile($name)) {
+            $file = $request->file($name);
+
+            $imageType = getImageType($file);
+            $resizeImage = compressImageTmp($file);
+
+            $orginalName = time() . '_' . str_replace(' ', '_', $file->getClientOriginalName());
+            $request->file($name)->move(public_path($destinationPath), $orginalName);
+            $image_path = $destinationPath . $orginalName;
+
+            // compressImageV2 ekhon actual saved path return kore (.jpg hote pare)
+            $image_path = compressImageV2($resizeImage, $image_path, $imageType, $max_width, $max_height, $imageQuality);
+
+            return $image_path;
+        }
+    } catch (Exception $e) {
+        echo 'Caught exception: ', $e->getMessage(), "\n";
+    }
+}
+
+
+// new end
 function invalidMobileNumber($mobile)
 {
     if (!preg_match('/^(((\+|00)?880)|0)(\d){10}$/', $mobile)) {

@@ -11,19 +11,24 @@ use DB;
 
 class CustomerFeedbackController extends Controller
 {
-    public function index(Request $request,CustomerFeedbackService $service){
-        try{
-            $rows = $service->getCustomerFeedback($request);
-           return view('backend.customer-feedback.index',compact('rows'));
-        }catch (\Exception $e){
+    public function index(Request $request, CustomerFeedbackService $service)
+    {
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Something went wrong!Please try again',
-            ], 400);
-        }
+        $rows = $service->getCustomerFeedback($request);
+        return view('backend.customer-feedback.index', compact('rows'));
+        // try {
+        //     $rows = $service->getCustomerFeedback($request);
+        //     return view('backend.customer-feedback.index', compact('rows'));
+        // } catch (\Exception $e) {
+
+        //     return response()->json([
+        //         'success' => false,
+        //         'message' => 'Something went wrong!Please try again',
+        //     ], 400);
+        // }
     }
-    public function create(){
+    public function create()
+    {
         return view('backend.customer-feedback.create');
     }
 
@@ -35,27 +40,28 @@ class CustomerFeedbackController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'comment' => 'required'
-        ],
-        [
-            'name.required' => "Type is Required",
-            'comment.required' => "Title is Required"
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'comment' => 'required'
+            ],
+            [
+                'name.required' => "Type is Required",
+                'comment.required' => "Title is Required"
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
-
         }
 
         try {
             DB::beginTransaction();
-           
+
             CustomerFeedback::create([
-                'name' => $request->name??'',
-                'comment' => $request->comment??''
+                'name' => $request->name ?? '',
+                'comment' => $request->comment ?? ''
 
             ]);
             DB::commit();
@@ -66,7 +72,7 @@ class CustomerFeedbackController extends Controller
         }
     }
 
-/**
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -74,8 +80,8 @@ class CustomerFeedbackController extends Controller
      */
     public function edit($id)
     {
-        $row=CustomerFeedback::find($id);
-        return view('backend.customer-feedback.edit',compact('row'));
+        $row = CustomerFeedback::find($id);
+        return view('backend.customer-feedback.edit', compact('row'));
     }
 
     /**
@@ -87,30 +93,31 @@ class CustomerFeedbackController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'comment' => 'required'
-        ],
-        [
-            'name.required' => "Type is Required",
-            'comment.required' => "Title is Required"
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'name' => 'required',
+                'comment' => 'required'
+            ],
+            [
+                'name.required' => "Type is Required",
+                'comment.required' => "Title is Required"
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
-
         }
 
 
         try {
             DB::beginTransaction();
-            $params=[
-                'name' => $request->name??'',
-                'comment' => $request->comment??''
+            $params = [
+                'name' => $request->name ?? '',
+                'comment' => $request->comment ?? ''
             ];
 
-            
+
 
             CustomerFeedback::where('id', $id)->update($params);
 
@@ -130,11 +137,8 @@ class CustomerFeedbackController extends Controller
      */
     public function destroy($id)
     {
-        $galleryObj=CustomerFeedback::find($id);
+        $galleryObj = CustomerFeedback::find($id);
         $galleryObj->delete();
-        return back()->with('success','The item has been deleted successfully!');
+        return back()->with('success', 'The item has been deleted successfully!');
     }
-
-    
-   
 }

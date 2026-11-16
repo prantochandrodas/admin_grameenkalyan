@@ -27,5 +27,11 @@ class Service extends Model
         'service_detail_banner_image',
         'service_detail_slogan',
         'long_description',
+        'service_detail_sub_title',
     ];
+
+    public function bannerImages()
+    {
+        return $this->hasMany(ServiceBannerImage::class, 'service_id');
+    }
 }

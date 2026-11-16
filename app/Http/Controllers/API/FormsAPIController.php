@@ -13,15 +13,19 @@ use Illuminate\Support\Facades\DB;
 
 class FormsAPIController extends BaseController
 {
-    public function saveContactFormData(Request $request){
-        $result=Contact::create(
+    public function saveContactFormData(Request $request)
+    {
+        $result = Contact::create(
             [
-                'name'=>$request->name,
-                'subject'=>$request->subject,
-                'email'=>$request->email,
-                'message'=>$request->message
-            ]);
-        if($result){
+                'name' => $request->name,
+                'subject' => $request->subject,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'date' => $request->date,
+                'message' => $request->message
+            ]
+        );
+        if ($result) {
             return response()->json([
                 'success' => true,
                 'message' => 'Thank you for contacting us! We will reach you out soon!',
@@ -29,14 +33,17 @@ class FormsAPIController extends BaseController
         }
     }
 
-    public function saveCareerFormData(Request $request){
-        $validator = Validator::make($request->all(), [
-            'department' => 'required',
-            'name' => 'required',
-            'email' => 'required|email',
-            'phone' => 'required',
-            'upload_cv' => 'required|mimes:doc,pdf,docx,zip|max:10000'
-        ],
+    public function saveCareerFormData(Request $request)
+    {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'department' => 'required',
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'upload_cv' => 'required|mimes:doc,pdf,docx,zip|max:10000'
+            ],
             [
                 'department.required' => "Department is Required",
                 'name.required' => "Name is Required",
@@ -48,21 +55,20 @@ class FormsAPIController extends BaseController
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return redirect('/join-us#join-us-form')->withErrors($validator)->withInput();
-
         }
         $params = [
-            'department' => $request->department??'',
-            'name' => $request->name??'',
-            'email' => $request->email??'',
-            'phone' => $request->phone??'',
+            'department' => $request->department ?? '',
+            'name' => $request->name ?? '',
+            'email' => $request->email ?? '',
+            'phone' => $request->phone ?? '',
 
         ];
 
-        if($request->hasfile('upload_cv')){
+        if ($request->hasfile('upload_cv')) {
             $cv = fileUploads($request, '/uploads/cv/', 'upload_cv');
-            $params['cv']=$cv;
+            $params['cv'] = $cv;
         };
 
         try {
@@ -80,10 +86,10 @@ class FormsAPIController extends BaseController
 
             return response()->json([
                 'success' => false,
-                'message' => 'Caught exception: ', $e->getMessage(), "\n",
+                'message' => 'Caught exception: ',
+                $e->getMessage(),
+                "\n",
             ], 200);
         }
-
-
     }
 }

@@ -33,7 +33,18 @@
                                 <form class="form-horizontal" role="form" method="POST"
                                     action="{{ url('/admin/home-contents') }}" enctype="multipart/form-data">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <div class="form-group row">
+                                        <label class="col-md-2 control-label" for="navbar_logo">Logo <span
+                                                class="text-danger">*</span></label>
+                                        <div class="col-md-10">
+                                            <input type="file" name="navbar_logo" id="navbar_logo" accept="image/*" />
+                                            <small class="form-text text-muted">Size should be max:100KB</small>
 
+                                            @error('navbar_logo')
+                                                <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label class="col-md-2 control-label" for="badge_image">Badge Image <span
                                                 class="text-danger">*</span></label>

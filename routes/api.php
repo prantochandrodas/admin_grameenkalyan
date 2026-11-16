@@ -18,11 +18,15 @@ use App\Http\Controllers\API\LocatorsAPIController;
 use App\Http\Controllers\API\SummaryReportsSettingsAPIController;
 use App\Http\Controllers\API\DepartmentsAPIController;
 use App\Http\Controllers\API\DesignationsAPIController;
+use App\Http\Controllers\API\DonateController;
 use App\Http\Controllers\API\PhotoAlbumsAPIController;
 use App\Http\Controllers\API\PhotoGalleryAPIController;
 use App\Http\Controllers\API\VideoGalleryAPIController;
 use App\Http\Controllers\API\SearchAPIController;
 use App\Http\Controllers\API\FormsAPIController;
+use App\Http\Controllers\API\NewsEventController;
+use App\Http\Controllers\API\WebsiteBannerAPIController;
+use App\Http\Controllers\API\ScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +41,10 @@ use App\Http\Controllers\API\FormsAPIController;
 
 /* New Module API(s) */
 
+Route::get('/schedules', [ScheduleController::class, 'index']);
+Route::get('/popup-images', [HomeContentsApiController::class, 'popupapi']);
+Route::get('/donates', [DonateController::class, 'index']);
+Route::get('/donates/{id}', [DonateController::class, 'show'])->where('id', '[0-9]+');
 Route::get('home-contents', [HomeContentsApiController::class, 'getHomepageContents']);
 Route::get('home-slider-contents', [HomeSliderContentsApiController::class, 'getHomeSliderContents']);
 Route::get('about-us-contents', [AboutUsContentsApiController::class, 'getAboutUsContents']);
@@ -45,8 +53,8 @@ Route::get('healthcare-services', [HealthcareServicesAPIController::class, 'getH
 Route::get('disease-specific-medicare', [DiseaseSpecificMedicareAPIController::class, 'getDiseaseSpecificMedicare']);
 Route::get('timeline', [TimelineAPIController::class, 'getTimeline']);
 Route::get('newsletter', [NewsletterAPIController::class, 'getNewsletter']);
+Route::get('service-contents/details', [ServiceContentsApiController::class, 'getServiceDetails']);
 /* End New Module API(s) */
-
 Route::get('story-categories', [StoryAPIController::class, 'getStoryCategories']);
 Route::get('stories', [StoryAPIController::class, 'getStories']);
 Route::get('members', [MembersAPIController::class, 'getMembers']);
@@ -63,3 +71,12 @@ Route::get('recommended-video-galleries', [VideoGalleryAPIController::class, 'ge
 Route::get('search-results', [SearchAPIController::class, 'getSearchResults']);
 Route::post('save-contact-form', [FormsAPIController::class, 'saveContactFormData']);
 Route::post('save-career-form', [FormsAPIController::class, 'saveCareerFormData']);
+Route::get('/news-events/slider', [NewsEventController::class, 'slider']);
+Route::get('/news-events', [NewsEventController::class, 'index']);
+Route::get('/news-events/{id}', [NewsEventController::class, 'show']);
+Route::get('banners/about', [WebsiteBannerAPIController::class, 'getAboutBanner']);
+Route::get('banners/healthcare', [WebsiteBannerAPIController::class, 'getHealthcareBanner']);
+Route::get('banners/corporate', [WebsiteBannerAPIController::class, 'getCorporateBanner']);
+Route::get('banners/health-force', [WebsiteBannerAPIController::class, 'getHealthForceBanner']);
+Route::get('banners/join-us', [WebsiteBannerAPIController::class, 'getJoinUsBanner']);
+Route::get('banners/stories', [WebsiteBannerAPIController::class, 'getStoriesBanner']);

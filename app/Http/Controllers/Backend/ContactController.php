@@ -11,11 +11,26 @@ use DB;
 
 class ContactController extends Controller
 {
-    public function index(Request $request,ContactService $service){
-        try{
+    public function bulkDelete(Request $request)
+    {
+
+        $request->validate([
+            'ids'   => 'required|array|min:1',
+            'ids.*' => 'integer|exists:contacts,id',
+        ], [
+            'ids.required' => 'Please select at least one item.',
+        ]);
+
+        $count = Contact::whereIn('id', $request->ids)->delete();
+
+        return back()->with('success', $count . ' item(s) deleted successfully!');
+    }
+    public function index(Request $request, ContactService $service)
+    {
+        try {
             $rows = $service->getConact($request);
-           return view('backend.contactus.index',compact('rows'));
-        }catch (\Exception $e){
+            return view('backend.contactus.index', compact('rows'));
+        } catch (\Exception $e) {
 
             return response()->json([
                 'success' => false,
@@ -32,14 +47,14 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-        $galleryObj=Contact::find($id);
+        $galleryObj = Contact::find($id);
         $galleryObj->delete();
-        return back()->with('success','The item has been deleted successfully!');
+        return back()->with('success', 'The item has been deleted successfully!');
     }
 
-    public function show($id,ContactService $service){
-            $row = $service->getContactDetails($id);
-            return view('backend.land-owner.view',compact('row'));
-        }
-
+    public function show($id, ContactService $service)
+    {
+        $row = $service->getContactDetails($id);
+        return view('backend.land-owner.view', compact('row'));
+    }
 }

@@ -14,4 +14,9 @@ class PhotoAlbum extends Model
     {
         return $this->hasMany(PhotoGallery::class, 'category_id', 'id');
     }
+
+    public function subAlbums()
+    {
+        return $this->hasMany(PhotoSubAlbum::class, 'photo_album_id');
+    }
 }

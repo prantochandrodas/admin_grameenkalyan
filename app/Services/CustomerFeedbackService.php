@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by IntelliJ IDEA.
  * User: Mamun
@@ -18,31 +19,30 @@ use Mail;
 
 class CustomerFeedbackService
 {
-   
-    function file_uploads($request, $destinationPath, $name) {
+
+    function file_uploads($request, $destinationPath, $name)
+    {
         try {
-            if($request->hasFile($name)){
+            if ($request->hasFile($name)) {
                 $file = $request->file($name);
-                $orginalName = time().'_'. $file->getClientOriginalName();
+                $orginalName = time() . '_' . $file->getClientOriginalName();
                 $orginalName = str_replace(' ', '_', $orginalName);
                 $request->file($name)->move(public_path($destinationPath), $orginalName);
                 $image_path = $destinationPath . $orginalName;
                 return $image_path;
             }
-
         } catch (Exception $e) {
             echo 'Caught exception: ', $e->getMessage(), "\n";
         }
     }
-    public function getCustomerFeedback($request){
-        $query=CustomerFeedback::select();
+    public function getCustomerFeedback($request)
+    {
+        $query = CustomerFeedback::select();
 
-        if($request->q){
-            $query=$query->where('name','like','%'.$request->q.'%')
-                ->orWhere('type','message','%'.$request->q.'%');
+        if ($request->q) {
+            $query = $query->where('name', 'like', '%' . $request->q . '%')
+                ->orWhere('type', 'message', '%' . $request->q . '%');
         }
-        return $query->orderBy('id','desc')->paginate(15);
+        return $query->orderBy('id', 'desc')->paginate(15);
     }
-
-
 }

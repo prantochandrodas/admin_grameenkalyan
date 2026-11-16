@@ -52,11 +52,13 @@ class TimelineController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'thumb_image' => 'required|mimes:jpeg,jpg,png',
-            'details' => 'required',
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'thumb_image' => 'required|mimes:jpeg,jpg,png',
+                'details' => 'required',
+            ],
             [
                 'title.required' => "Title field is Required",
                 'thumb_image.required' => "Thumb Image field is Required",
@@ -65,24 +67,25 @@ class TimelineController extends Controller
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             DB::beginTransaction();
-            $thumb_image='';
+            $thumb_image = '';
 
-            if($request->hasfile('thumb_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('thumb_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $thumb_image = profilePhotoUploads($request, '/uploads/contents/', 'thumb_image', $maxWidth, $maxHeight, 100);
             };
 
             Timeline::create([
-                'title' => $request->title??'',
-                'thumb_image' => $thumb_image??'',
-                'details' => $request->details??'',
+                'title' => $request->title ?? '',
+                'subtitle' => $request->subtitle ?? '',
+                'thumb_image' => $thumb_image ?? '',
+                'details' => $request->details ?? '',
             ]);
             DB::commit();
             return redirect("/admin/timeline")->with('success', 'New data has been added successfully!');
@@ -111,8 +114,8 @@ class TimelineController extends Controller
      */
     public function edit($id)
     {
-        $row=Timeline::find($id);
-        return view('backend.timeline.edit',compact('row'));
+        $row = Timeline::find($id);
+        return view('backend.timeline.edit', compact('row'));
     }
 
     /**
@@ -124,11 +127,13 @@ class TimelineController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required',
-            'thumb_image' => 'mimes:jpeg,jpg,png',
-            'details' => 'required',
-        ],
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'title' => 'required',
+                'thumb_image' => 'mimes:jpeg,jpg,png',
+                'details' => 'required',
+            ],
             [
                 'title.required' => "Title field is Required",
                 'thumb_image.mimes' => "Thumb Image should be in jpeg,jpg,png format",
@@ -136,22 +141,23 @@ class TimelineController extends Controller
             ]
         );
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return back()->withErrors($validator)->withInput();
         }
 
         try {
             DB::beginTransaction();
-            $params=[
-                'title' => $request->title??'',
-                'details' => $request->details??'',
+            $params = [
+                'title' => $request->title ?? '',
+                'subtitle' => $request->subtitle ?? '',
+                'details' => $request->details ?? '',
             ];
 
-            if($request->hasfile('thumb_image')){
-                $maxWidth=800;
-                $maxHeight=680;
+            if ($request->hasfile('thumb_image')) {
+                $maxWidth = 800;
+                $maxHeight = 680;
                 $thumb_image = profilePhotoUploads($request, '/uploads/contents/', 'thumb_image', $maxWidth, $maxHeight, 100);
-                $params['thumb_image'] = $thumb_image??'';
+                $params['thumb_image'] = $thumb_image ?? '';
             };
 
 
@@ -174,8 +180,8 @@ class TimelineController extends Controller
      */
     public function destroy($id)
     {
-        $dataObj=Timeline::find($id);
+        $dataObj = Timeline::find($id);
         $dataObj->delete();
-        return back()->with('success','The item data has been deleted successfully!');
+        return back()->with('success', 'The item data has been deleted successfully!');
     }
 }
