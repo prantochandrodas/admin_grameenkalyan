@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\HomeContentsApiController;
 use App\Http\Controllers\API\HomeSliderContentsApiController;
 use App\Http\Controllers\API\AboutUsContentsApiController;
+use App\Http\Controllers\API\CulturalPrioritiesApiController;
 use App\Http\Controllers\API\ServiceContentsApiController;
 use App\Http\Controllers\API\HealthcareServicesAPIController;
 use App\Http\Controllers\API\DiseaseSpecificMedicareAPIController;
@@ -25,6 +26,7 @@ use App\Http\Controllers\API\VideoGalleryAPIController;
 use App\Http\Controllers\API\SearchAPIController;
 use App\Http\Controllers\API\FormsAPIController;
 use App\Http\Controllers\API\NewsEventController;
+use App\Http\Controllers\API\PackageAPIController;
 use App\Http\Controllers\API\WebsiteBannerAPIController;
 use App\Http\Controllers\API\ScheduleController;
 
@@ -41,6 +43,8 @@ use App\Http\Controllers\API\ScheduleController;
 
 /* New Module API(s) */
 
+Route::get('/get-packages', [PackageAPIController::class, 'getPackages']);
+Route::get('cultural-priorities', [CulturalPrioritiesApiController::class, 'index']);
 Route::get('/schedules', [ScheduleController::class, 'index']);
 Route::get('/popup-images', [HomeContentsApiController::class, 'popupapi']);
 Route::get('/donates', [DonateController::class, 'index']);
@@ -80,3 +84,11 @@ Route::get('banners/corporate', [WebsiteBannerAPIController::class, 'getCorporat
 Route::get('banners/health-force', [WebsiteBannerAPIController::class, 'getHealthForceBanner']);
 Route::get('banners/join-us', [WebsiteBannerAPIController::class, 'getJoinUsBanner']);
 Route::get('banners/stories', [WebsiteBannerAPIController::class, 'getStoriesBanner']);
+
+
+
+
+// new api
+Route::get('summary-report-settings/basic', [SummaryReportsSettingsAPIController::class, 'getSummaryReportSettingsBasic']);
+Route::get('summary-report-settings/healthcare', [SummaryReportsSettingsAPIController::class, 'getSummaryReportSettingsHealthcare']);
+Route::get('service-contents/home', [ServiceContentsApiController::class, 'getServiceContentsHome']);

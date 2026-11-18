@@ -1,4 +1,59 @@
-<li class="menu-item " aria-haspopup="true">
+@php
+    // Active menu helpers (only for highlighting, no other logic changed)
+    $isDashboard = request()->is('admin/dashboard*');
+
+    // Authentications
+    $isUsers = request()->is('admin/user*');
+    $isRoles = request()->is('role*');
+    $isResources = request()->is('resource*');
+    $authOpen = $isUsers || $isRoles || $isResources;
+
+    // Healthcare Package
+    $isTestName = request()->is('admin/test-name*');
+    $isPackageCategory = request()->is('admin/package-category*');
+    $isPackage = request()->is('admin/package', 'admin/package/*');
+    $healthOpen = $isTestName || $isPackageCategory || $isPackage;
+
+    // Visitors
+    $isVisitors = request()->is('admin/visitors*');
+    $visitorOpen = $isVisitors;
+
+    // Gallery
+    $isPhotoAlbum = request()->is('admin/photo-album*');
+    $isPhotoSubAlbum = request()->is('admin/photo-sub-album*');
+    $isPhotoGallery = request()->is('admin/photo-gallery*');
+    $isVideoGallery = request()->is('admin/video-gallery*');
+    $galleryOpen = $isPhotoAlbum || $isPhotoSubAlbum || $isPhotoGallery || $isVideoGallery;
+
+    // Single menus
+    $isPopupImage = request()->is('admin/popup-image*');
+    $isWebsiteBanner = request()->is('admin/website-banner*');
+    $isStoryCategory = request()->is('admin/story-category*');
+    $isStory = request()->is('admin/story', 'admin/story/*');
+    $isStoryComments = request()->is('admin/story-comments*');
+    $isMembers = request()->is('admin/members*');
+    $isPeople = request()->is('admin/people*');
+    $isHealthCenter = request()->is('admin/health-center*');
+    $isCultural = request()->is('admin/cultural-priorities*');
+    $isDonate = request()->is('admin/donate*');
+    $isNewsEvent = request()->is('admin/news-event*');
+    $isLocator = request()->is('admin/locator*');
+    $isSchedule = request()->is('admin/schedule*');
+    $isSummarySettings = request()->is('admin/reports-summary-settings*');
+    $isContact = request()->is('admin/contact*');
+    $isDesignation = request()->is('admin/designation*');
+    $isDepartment = request()->is('admin/department*');
+    $isCareer = request()->is('admin/career*');
+    $isHomeContents = request()->is('admin/home-contents*');
+    $isHomeSlider = request()->is('admin/home-slider*');
+    $isAboutUs = request()->is('admin/about-us*');
+    $isServiceContents = request()->is('admin/service-contents*');
+    $isHealthcareServices = request()->is('admin/healthcare-services*');
+    $isDiseaseMedicare = request()->is('admin/disease-specific-medicare*');
+    $isTimeline = request()->is('admin/timeline*');
+    $isNewsletter = request()->is('admin/newsletter*');
+@endphp
+<li class="menu-item {{ $isDashboard ? 'menu-item-active' : '' }}" aria-haspopup="true">
     <a href="/admin/dashboard" class="menu-link "><span
             class="svg-icon menu-icon"><!--begin::Svg Icon | path:media/svg/icons/Design/Layers.svg--><svg
                 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px"
@@ -15,8 +70,8 @@
             </svg><!--end::Svg Icon--></span><span class="menu-text">Dashboard</span></a>
 </li>
 @if (has_group_access(['Role', 'Resource']))
-    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"><a href="#"
-            class="menu-link menu-toggle"><span
+    <li class="menu-item menu-item-submenu {{ $authOpen ? 'menu-item-open menu-item-here' : '' }}" aria-haspopup="true"
+        data-menu-toggle="hover"><a href="#" class="menu-link menu-toggle"><span
                 class="svg-icon menu-icon"><!--begin::Svg Icon | path:media/svg/icons/Design/Bucket.svg--><svg
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                     height="24px" viewBox="0 0 24 24" version="1.1">
@@ -29,22 +84,26 @@
                     </g>
                 </svg><!--end::Svg Icon--></span><span class="menu-text">Authentications</span><i
                 class="menu-arrow"></i></a>
-        <div class="menu-submenu " kt-hidden-height="80" style="display: none; overflow: hidden;">
+        <div class="menu-submenu " kt-hidden-height="80"
+            style="{{ $authOpen ? '' : 'display: none; overflow: hidden;' }}">
             <span class="menu-arrow"></span>
             <ul class="menu-subnav">
                 <li class="menu-item  menu-item-parent" aria-haspopup="true">
                     <span class="menu-link"><span class="menu-text">Authentication</span></span>
                 </li>
-                <li class="menu-item " aria-haspopup="true"><a href="{{ url('/admin/user') }}" class="menu-link "><i
+                <li class="menu-item {{ $isUsers ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                        href="{{ url('/admin/user') }}" class="menu-link "><i
                             class="menu-bullet menu-bullet-dot"><span></span></i><span
                             class="menu-text">Users</span></a></li>
                 @if (has_access('Alfaj\Acl\Http\RoleController@index', true))
-                    <li class="menu-item " aria-haspopup="true"><a href="/role" class="menu-link "><i
+                    <li class="menu-item {{ $isRoles ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                            href="/role" class="menu-link "><i
                                 class="menu-bullet menu-bullet-dot"><span></span></i><span
                                 class="menu-text">Roles</span></a></li>
                 @endif
                 @if (has_access('Alfaj\Acl\Http\ResourcesController@index', true))
-                    <li class="menu-item " aria-haspopup="true"><a href="/resource" class="menu-link "><i
+                    <li class="menu-item {{ $isResources ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                            href="/resource" class="menu-link "><i
                                 class="menu-bullet menu-bullet-dot"><span></span></i><span
                                 class="menu-text">Resources</span></a></li>
                 @endif
@@ -52,10 +111,56 @@
         </div>
     </li>
 @endif
+<li class="menu-item menu-item-submenu {{ $healthOpen ? 'menu-item-open menu-item-here' : '' }}" aria-haspopup="true"
+    data-menu-toggle="hover">
+    <a href="#" class="menu-link menu-toggle">
+        <span class="svg-icon menu-icon">
+            <i class="fas fa-heartbeat"></i>
+        </span>
+        <span class="menu-text">Healthcare Package</span>
+        <i class="menu-arrow"></i>
+    </a>
 
+    <div class="menu-submenu" style="{{ $healthOpen ? '' : 'display: none; overflow: hidden;' }}">
+        <span class="menu-arrow"></span>
+
+        <ul class="menu-subnav">
+            <li class="menu-item menu-item-parent" aria-haspopup="true">
+                <span class="menu-link">
+                    <span class="menu-text">Healthcare Package</span>
+                </span>
+            </li>
+
+            <li class="menu-item {{ $isTestName ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                <a href="{{ url('admin/test-name') }}" class="menu-link">
+                    <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                    </i>
+                    <span class="menu-text">Test Name</span>
+                </a>
+            </li>
+            <li class="menu-item {{ $isPackageCategory ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                <a href="{{ url('admin/package-category') }}" class="menu-link">
+                    <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                    </i>
+                    <span class="menu-text">Package Category</span>
+                </a>
+            </li>
+            <li class="menu-item {{ $isPackage ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                <a href="{{ url('admin/package') }}" class="menu-link">
+                    <i class="menu-bullet menu-bullet-dot">
+                        <span></span>
+                    </i>
+                    <span class="menu-text">Package</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</li>
 @if (has_group_access(['Backend-Visitors']))
-    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"><a href="#"
-            class="menu-link menu-toggle"><span
+    <li class="menu-item menu-item-submenu {{ $visitorOpen ? 'menu-item-open menu-item-here' : '' }}"
+        aria-haspopup="true" data-menu-toggle="hover"><a href="#" class="menu-link menu-toggle"><span
                 class="svg-icon menu-icon"><!--begin::Svg Icon | path:media/svg/icons/Design/Bucket.svg--><svg
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                     height="24px" viewBox="0 0 24 24" version="1.1">
@@ -67,14 +172,16 @@
                             fill="#000000" opacity="0.3"></path>
                     </g>
                 </svg><!--end::Svg Icon--></span><span class="menu-text">Visitors</span><i class="menu-arrow"></i></a>
-        <div class="menu-submenu " kt-hidden-height="80" style="display: none; overflow: hidden;">
+        <div class="menu-submenu " kt-hidden-height="80"
+            style="{{ $visitorOpen ? '' : 'display: none; overflow: hidden;' }}">
             <span class="menu-arrow"></span>
             <ul class="menu-subnav">
                 <li class="menu-item  menu-item-parent" aria-haspopup="true">
                     <span class="menu-link"><span class="menu-text">Themes</span></span>
                 </li>
                 @if (has_access('Backend\VisitorsController@index'))
-                    <li class="menu-item " aria-haspopup="true"><a href="/admin/visitors" class="menu-link "><i
+                    <li class="menu-item {{ $isVisitors ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                            href="/admin/visitors" class="menu-link "><i
                                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Visitor
                                 List</span></a></li>
                 @endif
@@ -83,58 +190,79 @@
         </div>
     </li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/website-banner" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Website Banners</span></a>
+<li class="menu-item {{ $isPopupImage ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/popup-image" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Popup Images</span></a>
+</li>
+<li class="menu-item {{ $isWebsiteBanner ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/website-banner" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Website Banners</span></a>
 </li>
 @if (has_access('Backend\StoryCategoryController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/story-category" class="menu-link "><i
+    <li class="menu-item {{ $isStoryCategory ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+            href="/admin/story-category" class="menu-link "><i
                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Story Category
                 List</span></a></li>
 @endif
 
 @if (has_access('Backend\StoryController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/story" class="menu-link "><i
-                class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Story List</span></a>
+    <li class="menu-item {{ $isStory ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/story"
+            class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Story
+                List</span></a>
     </li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/story-comments" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Story Comment
+<li class="menu-item {{ $isStoryComments ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/story-comments" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Story Comment
             List</span></a></li>
 @if (has_access('Backend\MemberController@index'))
-    {{-- <li class="menu-item" aria-haspopup="true"><a href="/admin/members" class="menu-link "><i
-                class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Member List</span></a>
-    </li> --}}
+    <li class="menu-item {{ $isMembers ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/members"
+            class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Member
+                List</span></a>
+    </li>
 @endif
 @if (has_access('Backend\PeoplesController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/people" class="menu-link "><i
-                class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">People List</span></a>
+    <li class="menu-item {{ $isPeople ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/people"
+            class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">People
+                List</span></a>
     </li>
 @endif
 @if (has_access('Backend\HealthCenterController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/health-center" class="menu-link "><i
+    <li class="menu-item {{ $isHealthCenter ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+            href="/admin/health-center" class="menu-link "><i
                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Health Center
                 List</span></a></li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/donate" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Donate</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/news-event" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">News & Events</span></a></li>
+<li class="menu-item {{ $isCultural ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/cultural-priorities" class="menu-link "><i
+            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Cultural Priorities
+            List</span></a></li>
+<li class="menu-item {{ $isDonate ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/donate"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Donate</span></a></li>
+<li class="menu-item {{ $isNewsEvent ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/news-event"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">News &
+            Events</span></a></li>
 @if (has_access('Backend\LocatorController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/locator" class="menu-link "><i
-                class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Locator List</span></a>
+    <li class="menu-item {{ $isLocator ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/locator"
+            class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+                class="menu-text">Locator List</span></a>
     </li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/schedule" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Schedule List</span></a>
+<li class="menu-item {{ $isSchedule ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/schedule"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Schedule
+            List</span></a>
 </li>
 
 @if (has_access('Backend\SummaryReportSettingsController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/reports-summary-settings" class="menu-link "><i
+    <li class="menu-item {{ $isSummarySettings ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+            href="/admin/reports-summary-settings" class="menu-link "><i
                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Summary Report
                 Settings</span></a></li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/contact" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Contact Request
+<li class="menu-item {{ $isContact ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/contact"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Contact
+            Request
             List</span></a></li>
 {{-- @if (has_access('Backend\ContactController@index'))
     <li class="menu-item" aria-haspopup="true"><a href="/admin/contact" class="menu-link "><i
@@ -149,22 +277,25 @@
 @endif --}}
 
 @if (has_access('Backend\DesignationController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/designation" class="menu-link "><i
+    <li class="menu-item {{ $isDesignation ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+            href="/admin/designation" class="menu-link "><i
                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Designation</span></a>
     </li>
 @endif
 
 @if (has_access('Backend\DepartmentController@index'))
-    <li class="menu-item" aria-haspopup="true"><a href="/admin/department" class="menu-link "><i
-                class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Department</span></a>
+    <li class="menu-item {{ $isDepartment ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+            href="/admin/department" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+                class="menu-text">Department</span></a>
     </li>
 @endif
-<li class="menu-item" aria-haspopup="true"><a href="/admin/career" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Applicants List</span></a>
+<li class="menu-item {{ $isCareer ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/career"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Applicants
+            List</span></a>
 </li>
 @if (has_group_access(['Backend-VideoGallery', 'Backend-PhotoGallery']))
-    <li class="menu-item menu-item-submenu" aria-haspopup="true" data-menu-toggle="hover"><a href="#"
-            class="menu-link menu-toggle"><span
+    <li class="menu-item menu-item-submenu {{ $galleryOpen ? 'menu-item-open menu-item-here' : '' }}"
+        aria-haspopup="true" data-menu-toggle="hover"><a href="#" class="menu-link menu-toggle"><span
                 class="svg-icon menu-icon"><!--begin::Svg Icon | path:media/svg/icons/Design/Bucket.svg--><svg
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
                     height="24px" viewBox="0 0 24 24" version="1.1">
@@ -176,23 +307,28 @@
                             fill="#000000" opacity="0.3"></path>
                     </g>
                 </svg><!--end::Svg Icon--></span><span class="menu-text">Gallery</span><i class="menu-arrow"></i></a>
-        <div class="menu-submenu" kt-hidden-height="80" style="display: none; overflow: hidden;">
+        <div class="menu-submenu" kt-hidden-height="80"
+            style="{{ $galleryOpen ? '' : 'display: none; overflow: hidden;' }}">
             <span class="menu-arrow"></span>
             <ul class="menu-subnav">
                 <li class="menu-item  menu-item-parent" aria-haspopup="true">
                     <span class="menu-link"><span class="menu-text">Gallery</span></span>
                 </li>
-                <li class="menu-item " aria-haspopup="true"><a href="{{ url('/admin/photo-album') }}"
-                        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
-                            class="menu-text">Photo Album</span></a></li>
-                <li class="menu-item " aria-haspopup="true"><a href="{{ url('/admin/photo-sub-album') }}"
-                        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
-                            class="menu-text">Photo Sub Album</span></a></li>
-                <li class="menu-item " aria-haspopup="true"><a href="{{ url('/admin/photo-gallery') }}"
-                        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
-                            class="menu-text">Photo Gallery</span></a></li>
+                <li class="menu-item {{ $isPhotoAlbum ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                        href="{{ url('/admin/photo-album') }}" class="menu-link "><i
+                            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Photo
+                            Album</span></a></li>
+                <li class="menu-item {{ $isPhotoSubAlbum ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                        href="{{ url('/admin/photo-sub-album') }}" class="menu-link "><i
+                            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Photo Sub
+                            Album</span></a></li>
+                <li class="menu-item {{ $isPhotoGallery ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                        href="{{ url('/admin/photo-gallery') }}" class="menu-link "><i
+                            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Photo
+                            Gallery</span></a></li>
                 @if (has_access('Backend\VideoGalleryController@index'))
-                    <li class="menu-item " aria-haspopup="true"><a href="/admin/video-gallery" class="menu-link "><i
+                    <li class="menu-item {{ $isVideoGallery ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+                            href="/admin/video-gallery" class="menu-link "><i
                                 class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Video
                                 Gallery</span></a></li>
                 @endif
@@ -201,24 +337,32 @@
     </li>
 @endif
 {{-- /* New backend modules 10-07-2023 */ --}}
-<li class="menu-item" aria-haspopup="true"><a href="/admin/home-contents" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Home Contents</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/home-slider" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Home Slider</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/about-us" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">About Us Contents</span></a>
+<li class="menu-item {{ $isHomeContents ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/home-contents" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Home Contents</span></a></li>
+<li class="menu-item {{ $isHomeSlider ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/home-slider" class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Home Slider</span></a></li>
+<li class="menu-item {{ $isAboutUs ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/about-us"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">About Us
+            Contents</span></a>
 </li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/service-contents" class="menu-link "><i
+<li class="menu-item {{ $isServiceContents ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/service-contents" class="menu-link "><i
             class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Service Contents</span></a>
 </li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/healthcare-services" class="menu-link "><i
+<li class="menu-item {{ $isHealthcareServices ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/healthcare-services" class="menu-link "><i
             class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Healthcare
             Services</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/disease-specific-medicare" class="menu-link "><i
+<li class="menu-item {{ $isDiseaseMedicare ? 'menu-item-active' : '' }}" aria-haspopup="true"><a
+        href="/admin/disease-specific-medicare" class="menu-link "><i
             class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Disease Specific
             Medicares</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/timeline" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Timelines</span></a></li>
-<li class="menu-item" aria-haspopup="true"><a href="/admin/newsletter" class="menu-link "><i
-            class="menu-bullet menu-bullet-dot"><span></span></i><span class="menu-text">Newsletters</span></a></li>
+<li class="menu-item {{ $isTimeline ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/timeline"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Timelines</span></a></li>
+<li class="menu-item {{ $isNewsletter ? 'menu-item-active' : '' }}" aria-haspopup="true"><a href="/admin/newsletter"
+        class="menu-link "><i class="menu-bullet menu-bullet-dot"><span></span></i><span
+            class="menu-text">Newsletters</span></a></li>
 {{-- /* ends here */ --}}

@@ -20,25 +20,38 @@ class StoryAPIController extends BaseController
         ], 200);
     }
 
+    // public function getStories(Request $request)
+    // {
+    //     $category = $request->category_id;
+    //     $data = Story::select();
+
+    //     if ($category) {
+    //         $data = $data->where('category_id', $category)->get();
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Data has been delivered!',
+    //             'data' => $data,
+    //         ], 200);
+    //     } else {
+    //         $data = $data->get();
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => 'Data has been delivered!',
+    //             'data' => $data,
+    //         ], 200);
+    //     }
+    // }
+
     public function getStories(Request $request)
     {
-        $category = $request->category_id;
-        $data = Story::select();
+        $categoryId = $request->category_id;
 
-        if ($category) {
-            $data = $data->where('category_id', $category)->get();
-            return response()->json([
-                'success' => true,
-                'message' => 'Data has been delivered!',
-                'data' => $data,
-            ], 200);
+        if ($categoryId) {
+            $data = Story::where('category_id', $categoryId)->first();
         } else {
-            $data = $data->get();
-            return response()->json([
-                'success' => true,
-                'message' => 'Data has been delivered!',
-                'data' => $data,
-            ], 200);
+            $data = Story::get();
         }
+
+        return response()->json($data);
     }
 }

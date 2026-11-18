@@ -9,6 +9,22 @@ use Illuminate\Support\Str;
 
 class ServiceContentsApiController extends BaseController
 {
+    public function getServiceContentsHome()
+    {
+        $data = Service::select([
+            'id',
+            'title',
+            'homepage_thumb_image',
+            'created_at',
+            'updated_at',
+        ])
+            ->orderBy('id')
+            ->get();
+
+        return response()->json([
+            'data' => $data,
+        ], 200);
+    }
     public function getServiceContents()
     {
         $data = Service::get();
